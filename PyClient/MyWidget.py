@@ -27,9 +27,10 @@ class DmWidget(QPushButton):
 
 
 class DmView(QWidget):
-    def __init__(self):
+    def __init__(self, url):
         super().__init__()
         print("尝试连接弹幕服务器...")
+        self.url = url
         self.dataRecvws = QWebSocket()
         self.config = self.dataRecvws.sslConfiguration()  # ssl认证之类的
         self.config.setPeerVerifyMode(QSslSocket.VerifyNone)
@@ -47,7 +48,7 @@ class DmView(QWidget):
         self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.X11BypassWindowManagerHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
 
-        self.dataRecvws.open(QUrl("ws://www.logan-qiu.cn:59335/syncMsg"))
+        self.dataRecvws.open(QUrl(url))
 
     def onConnected(self):
         print("连接成功！")
@@ -68,4 +69,5 @@ class DmView(QWidget):
                 DmWidget(self, dict["Content"], channel=i).show()
                 break
     def onDisconnect(self):
-        print("连接丢失")
+        print("连接丢失, 尝试重连")
+        self.dataRecvws.open(QUrl(self.url))

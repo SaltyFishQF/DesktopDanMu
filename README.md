@@ -16,7 +16,9 @@ pip install PyQt5
 
 然后运行
 ```bash
-python PyClient/main.py
+python PyClient/main.py <server_url>   # serverurl是你的服务器接口
+# example: 
+# python PyClient/main.py ws://127.0.0.1:8080/syncMsg
 ```
 
 ### ~~3. Java客户端~~  

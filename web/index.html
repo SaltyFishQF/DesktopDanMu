@@ -4,25 +4,22 @@
     <meta charset="UTF-8">
     <title>弹幕发射器</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="format-detection" content="telephone=no"/>
 </head>
 <body>
 <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<!--<form>-->
-<!--<input type="text" id="content" class="col-sm-8"/>-->
-<!--<button type="button" onclick="javascript:send()" class="col-sm-8">发送</button>-->
-<!--</form>-->
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span12">
-            <form>
-                <fieldset>
-                    <legend>弹幕内容</legend><input type="text" class="col-md-8" id="content"/>
-                    <br/><br/>
-                    <button class="btn" type="button" onclick="javascript:send()">提交</button>
-                </fieldset>
+<link rel="stylesheet" type="text/css" href="main.css">
+
+<div class="main">
+    <div class="login">
+        <div class="account">
+            <form class="loginform" method="post" action="/login" onsubmit="return false;">
+                <div class="rlogo">弹幕发送</div>
+                <div class="line">
+                    <input class="inputtxt" value="" type="text" id="content">
+                </div>
+                <div class="login_btn">
+                    <input id="login-button" value="发送" onclick="javascript:send()">
+                </div>
             </form>
         </div>
     </div>
@@ -30,12 +27,16 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="const.js"></script>
 <script>
-    function send(){
+    function send() {
+        console.log("send")
         var content = $("#content").val();
         console.log(content);
-        if (content == ''){
+        if (content == '') {
             alert("不能为空");
             return
         }
@@ -43,7 +44,7 @@
         data.Color = 1;
         data.Content = content;
         $.ajax({
-            url: "http://www.logan-qiu.cn:59335/newMsg",
+            url: server_url,
             type: "POST",
             dataType: "json",
             contentType: "application/json",
