@@ -36,12 +36,16 @@ class DmView(QWidget):
         self.config.setPeerVerifyMode(QSslSocket.VerifyNone)
         self.config.setProtocol(QSsl.TlsV1SslV3)
         self.dataRecvws.setSslConfiguration(self.config)
-
+        self.dataRecvws.error.connect(self.onError)
         self.dataRecvws.disconnected.connect(self.onDisconnect)  # 断开连接
         self.dataRecvws.textMessageReceived.connect(self.onTextReceived)
         # self.dataRecvws.binaryMessageReceived.connect(self.onBinaryReceived)#数据接收
         self.dataRecvws.connected.connect(self.onConnected)
 
+        self.timer = QTimer()
+        self.timer.setInterval(0.5*60*1000)
+        self.timer.start()
+        self.timer.timeout.connect(self.doPing)
         self.showMaximized()
         self.setWindowOpacity(1)
         self.setFocusPolicy(Qt.NoFocus)
@@ -68,6 +72,14 @@ class DmView(QWidget):
                 dict = json.loads(message, strict=False)
                 DmWidget(self, dict["Content"], channel=i).show()
                 break
+
     def onDisconnect(self):
         print("连接丢失, 尝试重连")
         self.dataRecvws.open(QUrl(self.url))
+
+    def onError(self, error_code):
+        print("error code: {}".format(error_code))
+        print(self.dataRecvws.errorString())
+
+    def doPing(self):
+        self.dataRecvws.ping(b"pong")
